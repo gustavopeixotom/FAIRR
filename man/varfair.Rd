@@ -39,7 +39,7 @@ varfair(
 
 \item{varci}{Logical. Compute the VAR's IRF confidence intervals? Defaults to \code{FALSE}.}
 
-\item{varboot}{Logical. If \code{varci = TRUE}, whether to bootstrap the VAR intervals (passed to \code{\link[vars:irf]{vars::irf}}).}
+\item{varboot}{Numeric. If \code{varci = TRUE}, specifying the runs for the bootstrap (passed to \code{\link[vars:irf]{vars::irf}}).}
 
 \item{spanloess}{Numeric. Smoothing parameter for the VAR IRF prior (see \code{\link[stats:loess]{loess}}).}
 
@@ -67,5 +67,5 @@ A list containing:
 }
 }
 \description{
-Function Approximation of Impulse Responses (FAIR) using Gaussian basis functions by setting up a VAR(p) and extracting orthogonal shocks and an IRF to set priors.
+Functional Approximation of Impulse Responses (FAIR) using Gaussian basis functions by setting up a VAR(p) and extracting orthogonal shocks and an IRF to set priors.
 }

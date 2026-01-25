@@ -1,7 +1,7 @@
 #' Estimate FAIR_G(K) Models with Exogenous Shocks
 #'
 #' @description
-#' Function Approximation of Impulse Responses (FAIR) using Gaussian basis functions using shocks that are already considered exogenous.
+#' Functional Approximation of Impulse Responses (FAIR) using Gaussian basis functions using shocks that are already considered exogenous.
 #'
 #' @param Y A numeric vector or matrix. The dependent variable.
 #' @param Z A numeric vector or matrix. The exogenous shock variable.

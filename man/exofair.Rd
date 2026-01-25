@@ -68,5 +68,5 @@ A list containing:
 }
 }
 \description{
-Function Approximation of Impulse Responses (FAIR) using Gaussian basis functions using shocks that are already considered exogenous.
+Functional Approximation of Impulse Responses (FAIR) using Gaussian basis functions using shocks that are already considered exogenous.
 }

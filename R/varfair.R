@@ -1,7 +1,7 @@
 #' Estimate FAIR_G(K) Models
 #'
 #' @description
-#' Function Approximation of Impulse Responses (FAIR) using Gaussian basis functions by setting up a VAR(p) and extracting orthogonal shocks and an IRF to set priors. 
+#' Functional Approximation of Impulse Responses (FAIR) using Gaussian basis functions by setting up a VAR(p) and extracting orthogonal shocks and an IRF to set priors. 
 #'
 #' @param Y A numeric vector or matrix. The dependent variable.
 #' @param Z A numeric vector or matrix. The shock variable.
@@ -10,7 +10,7 @@
 #' @param asym Logical. If \code{TRUE}, fits separate IRFs for positive and negative shocks. If \code{FALSE}, fits a single symmetric IRF.
 #' @param maxvarlag Integer. Maximum number of lags for the VAR used to identify orthogonal shocks.
 #' @param varci Logical. Compute the VAR's IRF confidence intervals? Defaults to \code{FALSE}.
-#' @param varboot Logical. If \code{varci = TRUE}, whether to bootstrap the VAR intervals (passed to \code{\link[vars:irf]{vars::irf}}).
+#' @param varboot Numeric. If \code{varci = TRUE}, specifying the runs for the bootstrap (passed to \code{\link[vars:irf]{vars::irf}}).
 #' @param spanloess Numeric. Smoothing parameter for the VAR IRF prior (see \code{\link[stats:loess]{loess}}).
 #' @param sdpar Numeric. Standard deviation of the Normal prior for parameters b and c.
 #' @param cores Integer. Number of CPU cores for Stan. If greater than \code{chains}, defaults to \code{chains}.
