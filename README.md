@@ -8,7 +8,7 @@ Or exponential basis functions :
 
 $$\psi_h = a \exp(-\ell h)$$
 
-The estimation is performed via Stan and users must therefore have a C++ compiler installed. If you encounter errors related to "Rtools" or "C++14", please ensure your toolchain is properly configured for Stan by following the [RStan Getting Started guide](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started). \## Update **1.1.0** : Added support for exponential basis functions. Changed the function names : Gaussian basis FAIR_G(K) can be estimated with `varfairG()` if you want to get orthogonal shocks from a VAR(p) estimated automatically and with `fairG()` if you already have a series of exogenous shocks. For exponential decay basis function FAIR_E(1), use `fairE()`, which requires shocks to already be exogenous or orthogonal.
+The estimation is performed via Stan and users must therefore have a C++ compiler installed. If you encounter errors related to "Rtools" or "C++14", please ensure your toolchain is properly configured for Stan by following the [RStan Getting Started guide](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started).
 
 ## Update
 **1.1.0** : Added support for exponential basis functions. Changed the function names : Gaussian basis FAIR_G(K) can be estimated with `varfairG()` if you want to get orthogonal shocks from a VAR(p) estimated automatically and with `fairG()` if you already have a series of exogenous shocks. For exponential decay basis function FAIR_E(1), use `fairE()`, which requires shocks to already be exogenous or orthogonal.
