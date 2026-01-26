@@ -12,10 +12,12 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 
+RcppExport SEXP _rcpp_module_boot_stan_fit4FAIRexponential_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4FAIRone_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4FAIRtwo_mod();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_rcpp_module_boot_stan_fit4FAIRexponential_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4FAIRexponential_mod, 0},
     {"_rcpp_module_boot_stan_fit4FAIRone_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4FAIRone_mod, 0},
     {"_rcpp_module_boot_stan_fit4FAIRtwo_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4FAIRtwo_mod, 0},
     {NULL, NULL, 0}
