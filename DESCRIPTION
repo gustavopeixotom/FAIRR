@@ -1,6 +1,6 @@
 Package: FAIRR
 Title: Functional Approximation of Impulse Responses
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: 
     person("Gauthier", "Serres", email = "gauthierserres@outlook.fr", role = c("aut", "cre"))
 Description: Implementation of the Functional Approximation of Impulse Responses (FAIR) methodology. This package allows for the estimation of symmetric and asymmetric impulse response functions by approximating them as a linear combination of Gaussian basis or exponential basis functions using Stan.

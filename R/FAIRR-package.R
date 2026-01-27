@@ -3,7 +3,7 @@
 
 #' The 'FAIRR' package.
 #'
-#' @description Functional Approximation of Impulse Responses as linear combination of Gaussian basis functions. 
+#' @description Functional Approximation of Impulse Responses on R.
 #'
 #' @name FAIRR-package
 #' @useDynLib FAIRR, .registration = TRUE

@@ -8,7 +8,7 @@
 \description{
 Implementation of the Functional Approximation of Impulse Responses (FAIR) methodology. This package allows for the estimation of symmetric and asymmetric impulse response functions by approximating them as a linear combination of Gaussian basis or exponential basis functions using Stan.
 
-Functional Approximation of Impulse Responses as linear combination of Gaussian basis functions.
+Functional Approximation of Impulse Responses on R.
 }
 \references{
 \itemize{

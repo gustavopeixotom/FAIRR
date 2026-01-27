@@ -15,6 +15,8 @@ The estimation is performed via Stan and users must therefore have a C++ compile
 
 **1.1.1** : Fixed documentation wording to include the exponential basis function.
 
+**1.1.2** : Fixed final output list for asymmetric exponential basis FAIR (wrong extract command).
+
 
 Plan for **1.2.0** (non-binding) : Adding up to K = 4 on Gaussian basis IRF's, adding a Gamma distribution basis function.
 

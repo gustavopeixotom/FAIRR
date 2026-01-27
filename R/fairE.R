@@ -34,71 +34,71 @@
 #' @importFrom R.utils withTimeout
 #' @importMethodsFrom rstan extract
 fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar = 20, cores = NA, chains = 4, iter = 2000, adapt_delta = 0.95, max_treedepth = 12, timeout = 180) {
-  start_time <- Sys.time() 
-  
+  start_time <- Sys.time()
+
   message("Please cite the original FAIR paper and my github !")
-  
+
   # cores check
   if (is.na(cores) || cores < 1) {
     cores <- 1
   } # no specified
-  
+
   if (cores > chains) {
     cores <- chains
     warning(paste("'cores' argument greater than 'chains' argument. rstan will use at most as many cores as chains; defaulting to", cores, "cores."))
   } # unnecessary cores
-  
+
   if (detrend > 2) {
     stop("detrend cannot be more than 2")
-  } 
-  
+  }
+
   # Stop if priors arent a vector of length 2K
   if (nrow(as.data.frame(priorvec)) != 2 || ncol(as.data.frame(priorvec)) != 1) {
     stop("The vector of priors must be of length 2 and width 1")
   }
   priorvec <- as.vector(priorvec)
-  
+
   # Yapping
   if (cores == 1) {
     if (!asym) {
       message(paste0(
-        "Estimating a symmetric FAIR_E(", 1, 
+        "Estimating a symmetric FAIR_E(", 1,
         ") with stan (", iter, " iterations, ", chains, " Markov Chains, 1 core). This might take a while..."
       ))
     } else {
       message(paste0(
-        "Estimating a pair of FAIR(", 1, 
-        ") for positive and negative shocks with stan (", iter, 
+        "Estimating a pair of FAIR(", 1,
+        ") for positive and negative shocks with stan (", iter,
         " iterations, ", chains, " Markov Chains, 1 core). This might take a while..."
       ))
     }
   } else {
     if (!asym) {
       message(paste0(
-        "Estimating a symmetric FAIR(", 1, 
-        ") with stan (", iter, " iterations,", chains, " Markov Chains, ", cores, 
+        "Estimating a symmetric FAIR(", 1,
+        ") with stan (", iter, " iterations,", chains, " Markov Chains, ", cores,
         " cores). Watch your CPU temperature !"
       ))
     } else {
       message(paste0(
-        "Estimating a pair of FAIR(", 1, 
-        ") for positive and negative shocks with stan (", iter, 
+        "Estimating a pair of FAIR(", 1,
+        ") for positive and negative shocks with stan (", iter,
         " iterations, ", chains, " Markov Chains, ", cores, " cores). Watch your CPU temperature !"
       ))
     }
   }
-  
+
   message(paste("Estimation will stop if stan takes longer than", timeout, "seconds. You can adjust this setting with the argument 'timeout'."))
-  
+
   if (cores > chains) {
     cores <- chains
     warning(paste("Stan will use at most as many cores as there are Markov Chains. This estimation will use only", cores, "cores."))
   }
-  
+
   # 1 - Data ----
   Y <- as.matrix(Y) # Dependent variable
   Z <- as.matrix(Z) # Shock
-  
+
   # Check widths
   if (ncol(Y) > 1) {
     stop("Y must be a univariate time series (width = 1).")
@@ -106,17 +106,17 @@ fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar 
   if (ncol(Z) > 1) {
     stop("Z must be a univariate time series (width = 1).")
   }
-  
+
   # Check length consistency
   if (nrow(Y) != nrow(Z)) {
     stop("Y and Z must have the same number of observations.")
   }
-  
+
   # 2 - Priors ---
   priors <- list()
     priors$a <- priorvec[1]
     priors$l <- priorvec[2]
-    
+
   # Partialing out the trends
   if (detrend == 0) { # No trend
     trim.df <- data.frame(Y = Y, shock = Z)
@@ -130,21 +130,21 @@ fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar 
       trim.df <- data.frame(Y = trim.y, shock = Z)
     }
   }
-  
+
   # Asymmetric shocks for FAIR
   if(asym == TRUE) {
     # Positive shocks
     trim.pdf <- trim.df
     trim.pdf$shock <- ifelse(trim.df$shock > 0, trim.df$shock, 0)
-    ppriors <- priors 
-    
+    ppriors <- priors
+
     # Negative shocks
     trim.ndf <- trim.df
     trim.ndf$shock <- ifelse(trim.df$shock < 0, trim.df$shock, 0)
     npriors <- priors
   }
-  
-  
+
+
   # 3 - Functional approximation ----
   # Getting stan data
   # Defining a stan data function for convenience
@@ -168,18 +168,18 @@ fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar 
     pdata <- stan_data(trim.pdf, H, ppriors, sdpar)
     ndata <- stan_data(trim.ndf, H, npriors, sdpar)
   }
-  
+
   # Running Stan
   # Forcing the initial stan guess to match the Exponential priors
   get_inits <- function(chain_id) {
     list(
-      a = priors$a, 
-      l = priors$l, 
+      a = priors$a,
+      l = priors$l,
       sigma = 1
     )
   }
   inits <- lapply(1:chains, get_inits)
-  
+
   # Function
   run_fair <- function(model_obj, data_list, chains, iter, cores, timeout, inits) {
     R.utils::withTimeout(
@@ -197,22 +197,22 @@ fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar 
       onTimeout = "error"
     )
   }
-  
+
   # Run FAIR
     model <- stanmodels$FAIRexponential
-  
+
   if (asym == FALSE) {
     message(paste0("Estimating symmetric FAIR_E(", 1, ")"))
     fit <- run_fair(model_obj = model, sdata, chains, iter, cores, timeout, inits)
   } else {
     message(paste0("Estimating FAIR_E(", 1, ") for positive shocks"))
     pfit <- run_fair(model_obj = model, pdata, chains, iter, cores, timeout, inits)
-    
+
     message(paste0("Estimating FAIR_E(", 1, ") for negative shocks"))
     nfit <- run_fair(model_obj = model, ndata, chains, iter, cores, timeout, inits)
   }
-  
-  
+
+
   # Outputs
   # Extract posterior draws from Stan
   extract_psi <- function(fit) {
@@ -223,8 +223,8 @@ fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar 
         l = post$l
       )
     # Fit
-    psi <- post$psi 
-    
+    psi <- post$psi
+
     list(
       params = list(
         mean = colMeans(params),
@@ -238,7 +238,7 @@ fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar 
       )
     )
   }
-  
+
   # Assemble the final output list
   if (!asym) {
     output <- list(
@@ -252,11 +252,11 @@ fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar 
   } else {
     output <- list(
       fair = list(
-        positive = pfit,
-        negative = nfit
+        positive = extract_psi(pfit),
+        negative = extract_psi(nfit)
       ),
-      negative.stan = summary(nfit),
-      positive.stan = summary(pfit),
+      negative.stan = nfit,
+      positive.stan = pfit,
       data = list(
         Y = trim.df$Y,
         neg.Z = trim.ndf$shock,
@@ -264,11 +264,11 @@ fairE <- function(Y, Z, H, priorvec = c(1, 2), detrend = 0, asym = FALSE, sdpar 
       )
     )
   }
-  
+
   end_time <- Sys.time()
   duration <- round(difftime(end_time, start_time, units = "secs"), 2)
-  
+
   message(paste0("Estimation completed in ", duration, " seconds !"))
-  
-  return(output) 
+
+  return(output)
 }
