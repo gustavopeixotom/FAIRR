@@ -261,6 +261,7 @@ fairG <- function(Y, Z, H, K = 1, priorvec = c(1, 1, 1), detrend = 0, asym = FAL
   # Extract posterior draws from Stan
   extract_psi <- function(fit, K) {
     post <- rstan::extract(fit)
+    
     # Parameters
     if (K == 1) {
       params <- cbind(
@@ -276,20 +277,14 @@ fairG <- function(Y, Z, H, K = 1, priorvec = c(1, 1, 1), detrend = 0, asym = FAL
     } else {
       stop("Unsupported K")
     }
+    
     # Fit
     psi <- post$psi 
     
+    # Return full N x S matrices (Rows = Parameters/Horizons, Columns = Draws)
     list(
-      params = list(
-        mean = colMeans(params),
-        low  = apply(params, 2, quantile, 0.025),
-        high = apply(params, 2, quantile, 0.975)
-      ),
-      psi = list(
-        mean = colMeans(psi),
-        low  = apply(psi, 2, quantile, 0.025),
-        high = apply(psi, 2, quantile, 0.975)
-      )
+      params_draws = t(params),
+      psi_draws    = t(psi)
     )
   }
   
